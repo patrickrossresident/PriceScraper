@@ -1,0 +1,1 @@
+{"ast":null,"code":"import '../assets/styles.css';","map":{"version":3,"sources":["D:/WEB/Grandz/apps/sample-embedded-app/pages/_app.js"],"names":[],"mappings":"AAAA,OAAO,sBAAP","sourcesContent":["import '../assets/styles.css'"]},"metadata":{},"sourceType":"module"}
