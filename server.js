@@ -21,7 +21,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
-const { SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY } = process.env;
+const { SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY, domain } = process.env;
 
 let pricesList = [{id: '111', title:"Simba", url: 'https://simbasleep.com/products/simba-hybrid-pro-mattress', path: '.inline-block.text-36'}]
 let token = '';
@@ -46,7 +46,7 @@ const updateMetafields = (priceList) =>{
       console.log(token)
       axios({
         method: 'post',
-        url: `https://${SHOPIFY_API_KEY}:${SHOPIFY_API_SECRET_KEY}@nectarstaging.myshopify.com/admin/api/2021-01/metafields.json`,
+        url: `https://${SHOPIFY_API_KEY}:${SHOPIFY_API_SECRET_KEY}@${domain}.myshopify.com/admin/api/2021-01/metafields.json`,
         data: JSON.stringify(body),
         headers:{
           "Content-type": "application/json",
@@ -107,7 +107,7 @@ setInterval(()=>{
   if(currentTime == 0){  
     scrapePrices(pricesList)
   }
-}, 120000)
+}, 60000)
 
 
 
