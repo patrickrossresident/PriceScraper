@@ -3,15 +3,16 @@ const dotenv = require('dotenv');
 const Koa = require('koa');
 const koaBody = require('koa-body');
 const Router = require('koa-router');
-//const https = require('https')
 const next = require('next');
 const { default: createShopifyAuth } = require('@shopify/koa-shopify-auth');
 const { verifyRequest } = require('@shopify/koa-shopify-auth');
 const session = require('koa-session');
-
+const http = require('http');
+const https = require('http');
 const axios = require('axios').default;
 const cheerio = require("cheerio")
-
+const fs = require('fs');
+const { default: enforceHttps } = require('koa-sslify')
 
 
 dotenv.config();
@@ -122,7 +123,12 @@ app.prepare().then(() => {
   const router = new Router({
     prefix: '/metafields'
   });
-/** */
+
+  // SSL options
+  const options = {
+    key: fs.readFileSync('key.key'),
+    cert: fs.readFileSync('key.crt')
+  }
   
   router.get('/get', (ctx, next) => {
     ctx.response.status = 201;
@@ -139,7 +145,9 @@ app.prepare().then(() => {
     
     
   });
-
+  app.use(enforceHttps({
+    port: 443
+  }));
   server.use(router.routes());
 
   server.use(
@@ -166,10 +174,10 @@ app.prepare().then(() => {
   });
 
   
-
-  server.listen(port, () => {
+  https.createServer(options, server.callback()).listen(port, () => {
     console.log(`> Ready on http://localhost:${port}`);
-  });
+  });;
+
 
 
 
