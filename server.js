@@ -39,7 +39,7 @@ const updateMetafields = (priceList) =>{
       const body = {
         "metafield": {
           "namespace": "competitors",
-          "key": price.title, 
+          "key": price.title,
           "value": `${price.value},${Date.now()}`,
           "value_type": "string"
         }
@@ -75,7 +75,7 @@ const scrapePrices = async (competitors) => {
     .then((html) => {
 
       let $ = cheerio.load(html);
-      
+
       let price = $(priceObj.path).prepend().text();
       newPricesArr.push({
         ...priceObj,
@@ -89,8 +89,8 @@ const scrapePrices = async (competitors) => {
       })
 
     })
-    
-    
+
+
     promicesArr.push(scapePrice);
   });
 
@@ -105,7 +105,7 @@ const scrapePrices = async (competitors) => {
 setInterval(()=>{
   let currentTime = new Date;
   currentTime = currentTime.getHours();
-  if(currentTime == 0){  
+  if(currentTime == 0){
     scrapePrices(pricesList)
   }
 }, 60000)
@@ -127,9 +127,10 @@ app.prepare().then(() => {
   // SSL options
   const options = {
     key: fs.readFileSync('key.key'),
-    cert: fs.readFileSync('key.crt')
+    cert: fs.readFileSync('key.crt'),
+    ca: fs.readFileSync('ca-bundle.crt')
   }
-  
+
   router.get('/get', (ctx, next) => {
     ctx.response.status = 201;
     ctx.body = JSON.stringify(getPrices());
@@ -140,12 +141,12 @@ app.prepare().then(() => {
     const competitors = JSON.parse(ctx.request.body);
 
     await scrapePrices(competitors);
-    
+
     ctx.body = JSON.stringify(getPrices(competitors));
-    
-    
+
+
   });
-  app.use(enforceHttps({
+  server.use(enforceHttps({
     port: 443
   }));
   server.use(router.routes());
@@ -165,7 +166,7 @@ app.prepare().then(() => {
   );
 
   server.use(verifyRequest());
-  
+
   server.use(async (ctx) => {
     await handle(ctx.req, ctx.res);
     ctx.respond = false;
@@ -173,7 +174,7 @@ app.prepare().then(() => {
     return
   });
 
-  
+
   https.createServer(options, server.callback()).listen(port, () => {
     console.log(`> Ready on http://localhost:${port}`);
   });;
@@ -183,7 +184,3 @@ app.prepare().then(() => {
 
 
 });
-
-
-
-

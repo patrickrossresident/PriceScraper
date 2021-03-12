@@ -13,13 +13,10 @@ export function AppWrapper({ children }) {
       path,
       title
     }
-    const idx = prices.findIndex(price => price.id = id)
-    
-    setPrices([
-      ...prices.slice(0, idx),
-      newPrice,
-      ...prices.slice(idx+1)
-    ])
+    const newPrices = prices.filter(price => price.id != id);
+    console.log(newPrices);
+    newPrices.push(newPrice);
+    setPrices(newPrices);
   }
 
   const addPrice = (title, url, path) => {

@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 const PriceList = () => {
   const {prices, removePrice, getAllPrices} = useAppContext();
-
+  console.log(prices)
   const renderFunc = () => {
     const pricesList = prices.map(({id, title, value}) => {
       const text = value == 0 ? 'Can\'t Scripe Price From This Resource' : value;
