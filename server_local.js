@@ -12,7 +12,8 @@ const https = require('https');
 const axios = require('axios').default;
 const cheerio = require("cheerio")
 const fs = require('fs');
-const { default: enforceHttps } = require('koa-sslify')
+const { default: enforceHttps } = require('koa-sslify');
+const schedule = require('node-schedule');
 
 
 dotenv.config();
@@ -24,7 +25,7 @@ const handle = app.getRequestHandler();
 
 const { SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY, domain } = process.env;
 
-let pricesList = [{id: '111', title:"Simba", url: 'https://simbasleep.com/products/simba-hybrid-pro-mattress', path: '.inline-block.text-36'}]
+let pricesList = JSON.parse( fs.readFileSync('competitors.json') )
 let token = '';
 
 const getPrices = () => {
@@ -62,7 +63,19 @@ const updateMetafields = (priceList) =>{
       });
   })
 }
-
+const updateCompetitorsFile = (newPricesArr) => {
+  var jsonContent = JSON.stringify(newPricesArr);
+  console.log(jsonContent);
+  
+  fs.writeFile("competitors.json", jsonContent, 'utf8', function (err) {
+      if (err) {
+          console.log("An error occured while writing JSON Object to File.");
+          return console.log(err);
+      }
+  
+      console.log("JSON file has been saved.");
+  });
+}
 const scrapePrices = async (competitors) => {
   const promicesArr = [];
   const newPricesArr = [];
@@ -96,19 +109,15 @@ const scrapePrices = async (competitors) => {
 
   await Promise.allSettled(promicesArr).then((response) => {
     pricesList = newPricesArr;
-    updateMetafields(newPricesArr);
+    updateCompetitorsFile(newPricesArr);
+    //updateMetafields(newPricesArr);
 
   })
 }
 
-
-setInterval(()=>{
-  let currentTime = new Date;
-  currentTime = currentTime.getHours();
-  if(currentTime == 0){  
-    scrapePrices(pricesList)
-  }
-}, 60000)
+schedule.scheduleJob('59 * * * *', () =>{
+  scrapePrices(pricesList);
+})
 
 
 

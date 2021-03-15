@@ -1,3 +1,7 @@
-/.env
-node_modules
-.next
+.env
+node_modules/
+.next/
+key.key
+key.crt
+ca-bundle.crt
+competitors.json

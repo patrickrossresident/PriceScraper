@@ -28,11 +28,6 @@
       "static/chunks/main.js",
       "static/chunks/webpack.js",
       "static/chunks/pages/prices.js"
-    ],
-    "/prices/[id]": [
-      "static/chunks/main.js",
-      "static/chunks/webpack.js",
-      "static/chunks/pages/prices/[id].js"
     ]
   },
   "ampFirstPages": []
