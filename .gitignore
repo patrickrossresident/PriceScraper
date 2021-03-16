@@ -4,3 +4,5 @@ node_modules/
 key.key
 key.crt
 ca-bundle.crt
+token.json
+competitors.json

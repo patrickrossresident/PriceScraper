@@ -10,7 +10,7 @@ const Scraper = () => {
 
   return (
     <div className="main-btn-wrapper container">
-      <button className="btn btn-primary" onClick={() => scrapeAllPrices()}>Save</button>
+      <button className="btn btn-primary" onClick={() => scrapeAllPrices()}>Scrape Prices</button>
     </div>
   )
 }

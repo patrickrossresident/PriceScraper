@@ -26,7 +26,7 @@ const handle = app.getRequestHandler();
 const { SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY, domain } = process.env;
 
 let pricesList = JSON.parse( fs.readFileSync('competitors.json') )
-let token = '';
+let token = fs.readFileSync('competitors.json');
 
 const getPrices = () => {
   return pricesList;
@@ -117,7 +117,7 @@ const scrapePrices = async (competitors) => {
 }
 
 
-schedule.scheduleJob('59 * * * *', () =>{
+schedule.scheduleJob('0 0 * * *', () =>{
   scrapePrices(pricesList);
 })
 
@@ -170,6 +170,14 @@ app.prepare().then(() => {
       afterAuth(ctx) {
         const { shop, accessToken } = ctx.session;
         token = accessToken;
+        fs.writeFile("token.json", token, 'utf8', function (err) {
+          if (err) {
+              console.log("An error occured while writing JSON Object to File.");
+              return console.log(err);
+          }
+      
+          console.log("JSON file has been saved.");
+      });
         console.log(accessToken)
         ctx.redirect('/');
       },
